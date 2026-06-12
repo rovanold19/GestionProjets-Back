@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'une-cle-de-secours-uniquement-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['://onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.pythonanywhere.com', 'localhost', '127.0.0.1']
 CORS_ALLOWED_ORIGINS = [
     "https://gestion-projets-iota.vercel.app",
 ]
@@ -84,7 +84,7 @@ REST_FRAMEWORK = {
 
 
 # CORS — Autoriser Angular (dev)
-CORS_ALLOWED_ORIGINS = ["http://localhost:4200","https://gestion-projets-iota.vercel.app"]
+CORS_ALLOWED_ORIGINS = ["https://gestion-projets-iota.vercel.app"]
 CORS_ALLOW_CREDENTIALS = True
 # JWT — Durée de vie des tokens
 from datetime import timedelta
