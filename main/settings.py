@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h=#2d5myp-1$4&inck%hq4@0p342jd4z06_b6z=x)3+b)l+2yu'
+
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'une-cle-de-secours-uniquement-en-local')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ['://onrender.com', 'localhost', '127.0.0.1']
+CORS_ALLOWED_ORIGINS = [
+    "https://gestion-projets-iota.vercel.app",
+]
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -52,6 +59,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,7 +84,7 @@ REST_FRAMEWORK = {
 
 
 # CORS — Autoriser Angular (dev)
-CORS_ALLOWED_ORIGINS = ["http://localhost:4200","http://127.0.0.1:4200"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:4200","https://gestion-projets-iota.vercel.app"]
 CORS_ALLOW_CREDENTIALS = True
 # JWT — Durée de vie des tokens
 from datetime import timedelta
@@ -115,6 +123,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 
 # Password validation
@@ -153,4 +163,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 AUTH_USER_MODEL = 'utilisateurs.User'
